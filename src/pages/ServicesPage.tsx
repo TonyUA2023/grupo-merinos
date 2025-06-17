@@ -1,379 +1,568 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Building, MapPin, Wrench, Award, CheckCircle, ArrowRight } from 'lucide-react';
-import AnimationWrapper, { StaggerContainer, StaggerItem, HoverCard } from '../components/AnimationWrapper';
-import type { Language } from '../types';
-import { services } from '../data/companyData';
+import { 
+  Wrench,
+  MapPin,
+  Building2,
+  Hammer,
+  Mountain,
+  Route,
+  ArrowRight,
+  CheckCircle,
+  Eye,
+  Layers,
+  Compass,
+  Settings,
+  Truck,
+  Shield,
+  Users
+} from 'lucide-react';
+import SubPageHero from '../components/SubPageHero';
 
 interface ServicesPageProps {
-  currentLanguage: Language;
+  currentLanguage: { code: string };
 }
 
 const ServicesPage: React.FC<ServicesPageProps> = ({ currentLanguage }) => {
-  const content = {
+  const [activeCategory, setActiveCategory] = useState('construction');
+
+  const servicesContent = {
     es: {
       hero: {
-        title: "Nuestros Servicios",
-        subtitle: "Soluciones integrales en ingeniería y construcción con tecnología de vanguardia y los más altos estándares de calidad",
-        badge: "Excelencia Técnica"
+        subtitle: "Nuestros Servicios",
+        title: "SOLUCIONES",
+        titleHighlight: "INTEGRALES",
+        description: "Ofrecemos servicios completos de ingeniería, construcción, mantenimiento y supervisión con más de 25 años de experiencia.",
+        breadcrumbs: [{ name: 'Servicios', path: '/services' }]
       },
-      sections: {
-        main: {
-          title: "Servicios Especializados",
-          subtitle: "Ofrecemos una gama completa de servicios para satisfacer todas las necesidades de construcción e ingeniería"
-        },
-        process: {
-          title: "Nuestro Proceso",
-          subtitle: "Un enfoque metodológico que garantiza resultados excepcionales",
-          steps: [
+      categories: {
+        construction: {
+          title: "Ingeniería y Construcción",
+          description: "Servicios completos de construcción e infraestructura",
+          icon: "building",
+          services: [
             {
-              title: "Consultoría y Planificación",
-              description: "Análisis detallado de requerimientos y elaboración de propuesta técnica"
+              name: "Movimiento de Tierras",
+              description: "Excavación, relleno y nivelación de terrenos para preparación de obras civiles.",
+              details: [
+                "Excavación masiva y selectiva",
+                "Relleno compactado",
+                "Nivelación y conformación",
+                "Mantenimiento vial"
+              ],
+              icon: "mountain",
+              image: "/images/services/movimiento-tierras.jpg"
             },
             {
-              title: "Diseño y Desarrollo",
-              description: "Creación de planos y especificaciones técnicas utilizando tecnología BIM"
+              name: "Obras de Arte y Drenaje",
+              description: "Construcción de estructuras especiales y sistemas de drenaje.",
+              details: [
+                "Muros de contención (Cidopeo, Armado)",
+                "Gaviones estructurales",
+                "Alcantarillas tipo TMC, MCA, LINER",
+                "Cunetas y sistemas de evacuación"
+              ],
+              icon: "layers",
+              image: "/images/services/obras-drenaje.jpg"
             },
             {
-              title: "Ejecución",
-              description: "Construcción con supervisión constante y control de calidad"
+              name: "Construcción de Puentes",
+              description: "Diseño y construcción de puentes y estructuras viales.",
+              details: [
+                "Puentes vehiculares",
+                "Puentes peatonales",
+                "Badenes y obras de arte menor",
+                "Estructuras especiales"
+              ],
+              icon: "route",
+              image: "/images/services/construccion-puentes.jpg"
             },
             {
-              title: "Entrega y Seguimiento",
-              description: "Entrega del proyecto y servicios de mantenimiento post-construcción"
+              name: "Obras de Saneamiento",
+              description: "Sistemas de agua potable, alcantarillado y tratamiento.",
+              details: [
+                "Redes de agua potable",
+                "Sistemas de alcantarillado",
+                "Plantas de tratamiento",
+                "Servicios de validación urbana"
+              ],
+              icon: "settings",
+              image: "/images/services/obras-saneamiento.jpg"
             }
           ]
         },
-        why: {
-          title: "¿Por qué elegir GRUPO MERINOS?",
-          reasons: [
-            "Más de 25 años de experiencia",
-            "Certificación ISO 9001",
-            "Tecnología BIM avanzada",
-            "Equipo de profesionales certificados",
-            "Cumplimiento de plazos garantizado",
-            "Atención personalizada 24/7"
+        surveying: {
+          title: "Ingeniería y Topografía",
+          description: "Servicios especializados en topografía, geodesia y geomática",
+          icon: "compass",
+          services: [
+            {
+              name: "Topografía y Geodesia",
+              description: "Levantamientos topográficos de alta precisión y georreferenciación.",
+              details: [
+                "Georreferenciación (Red primaria y secundaria)",
+                "Poligonales de apoyo y control",
+                "Red de nivelación de precisión",
+                "Trazo y replanteo de obras"
+              ],
+              icon: "compass",
+              image: "/images/services/topografia-geodesia.jpg"
+            },
+            {
+              name: "Levantamientos Topográficos",
+              description: "Cartografía digital y levantamientos especializados.",
+              details: [
+                "Levantamientos urbanos detallados",
+                "Catastro urbano y rural",
+                "Fotogrametría aérea (Drones)",
+                "Batimetría de cuerpos de agua"
+              ],
+              icon: "map",
+              image: "/images/services/levantamientos-topograficos.jpg"
+            },
+            {
+              name: "Ingeniería Gráfica & CAD",
+              description: "Diseño técnico y modelado digital especializado.",
+              details: [
+                "Diseño de planos técnicos",
+                "Modelado 3D de proyectos",
+                "Planos as-built",
+                "Documentación técnica completa"
+              ],
+              icon: "eye",
+              image: "/images/services/ingenieria-cad.jpg"
+            }
           ]
         }
-      }
+      },
+      stats: [
+        { number: "25+", label: "Años de Experiencia" },
+        { number: "150+", label: "Proyectos Ejecutados" },
+        { number: "50+", label: "Clientes Satisfechos" },
+        { number: "100%", label: "Calidad Garantizada" }
+      ]
     },
     en: {
       hero: {
-        title: "Our Services",
-        subtitle: "Comprehensive solutions in engineering and construction with cutting-edge technology and the highest quality standards",
-        badge: "Technical Excellence"
+        subtitle: "Our Services",
+        title: "INTEGRAL",
+        titleHighlight: "SOLUTIONS",
+        description: "We offer complete engineering, construction, maintenance and supervision services with over 25 years of experience.",
+        breadcrumbs: [{ name: 'Services', path: '/services' }]
       },
-      sections: {
-        main: {
-          title: "Specialized Services",
-          subtitle: "We offer a complete range of services to meet all construction and engineering needs"
-        },
-        process: {
-          title: "Our Process",
-          subtitle: "A methodological approach that guarantees exceptional results",
-          steps: [
+      categories: {
+        construction: {
+          title: "Engineering & Construction",
+          description: "Comprehensive construction and infrastructure services",
+          icon: "building",
+          services: [
             {
-              title: "Consulting and Planning",
-              description: "Detailed analysis of requirements and technical proposal development"
+              name: "Earthworks",
+              description: "Excavation, filling, and leveling for civil works preparation.",
+              details: [
+                "Mass and selective excavation",
+                "Compacted filling",
+                "Leveling and shaping",
+                "Road maintenance"
+              ],
+              icon: "mountain",
+              image: "/images/services/movimiento-tierras.jpg"
             },
             {
-              title: "Design and Development",
-              description: "Creation of plans and technical specifications using BIM technology"
+              name: "Art Structures & Drainage",
+              description: "Construction of special structures and drainage systems.",
+              details: [
+                "Retaining walls (Cast, Reinforced)",
+                "Structural gabions",
+                "TMC, MCA, LINER culverts",
+                "Ditches and evacuation systems"
+              ],
+              icon: "layers",
+              image: "/images/services/obras-drenaje.jpg"
             },
             {
-              title: "Execution",
-              description: "Construction with constant supervision and quality control"
+              name: "Bridge Construction",
+              description: "Design and construction of bridges and road structures.",
+              details: [
+                "Vehicular bridges",
+                "Pedestrian bridges",
+                "Speed bumps and minor structures",
+                "Special structures"
+              ],
+              icon: "route",
+              image: "/images/services/construccion-puentes.jpg"
             },
             {
-              title: "Delivery and Follow-up",
-              description: "Project delivery and post-construction maintenance services"
+              name: "Sanitation Works",
+              description: "Potable water, sewerage, and treatment systems.",
+              details: [
+                "Potable water networks",
+                "Sewer systems",
+                "Treatment plants",
+                "Urban validation services"
+              ],
+              icon: "settings",
+              image: "/images/services/obras-saneamiento.jpg"
             }
           ]
         },
-        why: {
-          title: "Why choose GRUPO MERINOS?",
-          reasons: [
-            "Over 25 years of experience",
-            "ISO 9001 certification",
-            "Advanced BIM technology",
-            "Team of certified professionals",
-            "Guaranteed deadline compliance",
-            "24/7 personalized attention"
+        surveying: {
+          title: "Surveying & Geomatics",
+          description: "Specialized services in surveying, geodesy and geomatics",
+          icon: "compass",
+          services: [
+            {
+              name: "Surveying & Geodesy",
+              description: "High-precision topographic surveys and georeferencing.",
+              details: [
+                "Georeferencing (Primary & Secondary network)",
+                "Control and support traverses",
+                "Precision leveling network",
+                "Layout and staking"
+              ],
+              icon: "compass",
+              image: "/images/services/topografia-geodesia.jpg"
+            },
+            {
+              name: "Topographic Surveys",
+              description: "Digital cartography and specialized surveys.",
+              details: [
+                "Detailed urban surveys",
+                "Urban and rural cadastre",
+                "Aerial photogrammetry (Drones)",
+                "Bathymetry of water bodies"
+              ],
+              icon: "map",
+              image: "/images/services/levantamientos-topograficos.jpg"
+            },
+            {
+              name: "Graphic Engineering & CAD",
+              description: "Technical design and specialized digital modeling.",
+              details: [
+                "Technical plan design",
+                "3D project modeling",
+                "As-built drawings",
+                "Complete technical documentation"
+              ],
+              icon: "eye",
+              image: "/images/services/ingenieria-cad.jpg"
+            }
           ]
         }
+      },
+      stats: [
+        { number: "25+", label: "Years of Experience" },
+        { number: "150+", label: "Projects Completed" },
+        { number: "50+", label: "Satisfied Clients" },
+        { number: "100%", label: "Guaranteed Quality" }
+      ]
+    }
+  };
+
+  const content = servicesContent[currentLanguage.code as keyof typeof servicesContent] || servicesContent.es;
+
+  const fadeInUp = {
+    initial: { opacity: 0, y: 80, scale: 0.95 },
+    animate: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1,
+      transition: {
+        duration: 1.2,
+        ease: [0.16, 1, 0.3, 1],
+        type: "spring",
+        damping: 25,
+        stiffness: 100
       }
     }
   };
 
-  const currentContent = content[currentLanguage.code];
+  const staggerContainer = {
+    animate: { 
+      transition: { 
+        staggerChildren: 0.15,
+        delayChildren: 0.1
+      } 
+    }
+  };
 
-  const serviceIcons = {
-    'Ingeniería y Construcción': Building,
-    'Engineering & Construction': Building,
-    'Ingeniería y Topografía': MapPin,
-    'Engineering & Topography': MapPin
+  const getIcon = (iconName: string, className: string = "w-6 h-6") => {
+    const icons = {
+      building: Building2,
+      compass: Compass,
+      mountain: Mountain,
+      layers: Layers,
+      route: Route,
+      settings: Settings,
+      map: MapPin,
+      eye: Eye,
+      wrench: Wrench,
+      hammer: Hammer,
+      truck: Truck,
+      shield: Shield
+    };
+    const Icon = icons[iconName as keyof typeof icons] || Building2;
+    return <Icon className={className} />;
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="pt-20"
-    >
+    <div className="min-h-screen overflow-hidden">
       {/* Hero Section */}
-      <section className="relative min-h-[60vh] flex items-center justify-center bg-gradient-to-br from-secondary-900 via-primary-800 to-accent-900 overflow-hidden">
-        {/* Efectos de fondo */}
-        <div className="absolute inset-0">
-          {[...Array(8)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute bg-white bg-opacity-5 rounded-full"
-              style={{
-                width: `${(i + 1) * 60}px`,
-                height: `${(i + 1) * 60}px`,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
-              animate={{
-                x: [0, 40, -40, 0],
-                y: [0, -40, 40, 0],
-                scale: [1, 1.2, 0.8, 1],
-              }}
-              transition={{
-                duration: 10 + i * 2,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-            />
-          ))}
+      <SubPageHero
+        currentLanguage={currentLanguage}
+        title={content.hero.title}
+        titleHighlight={content.hero.titleHighlight}
+        subtitle={content.hero.subtitle}
+        description={content.hero.description}
+        backgroundImage="/1.jpg"
+        breadcrumbs={content.hero.breadcrumbs}
+        icon={<Wrench className="w-8 h-8 text-white" />}
+        gradient="green"
+      />
+
+      {/* Estadísticas */}
+      <section className="py-16 md:py-20 bg-gradient-to-r from-[#00A8E0] to-[#00A651]">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+            className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8"
+          >
+            {content.stats.map((stat, idx) => (
+              <motion.div
+                key={idx}
+                variants={fadeInUp}
+                className="text-center text-white"
+              >
+                <motion.div
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  transition={{ delay: idx * 0.2, type: "spring", bounce: 0.4 }}
+                  className="text-3xl md:text-4xl lg:text-5xl font-bold mb-2"
+                >
+                  {stat.number}
+                </motion.div>
+                <div className="text-sm md:text-base text-white/90 font-medium">
+                  {stat.label}
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
+      </section>
 
-        <div className="relative z-10 container-custom text-center text-white">
-          <AnimationWrapper direction="down">
-            <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-lg border border-white/20 rounded-full px-6 py-3 mb-8">
-              <Wrench className="w-5 h-5 text-primary-400" />
-              <span className="text-sm font-medium">{currentContent.hero.badge}</span>
-            </div>
-          </AnimationWrapper>
-
-          <AnimationWrapper direction="up" delay={0.2}>
-            <h1 className="text-5xl lg:text-7xl font-display font-bold mb-6">
-              {currentContent.hero.title}
-            </h1>
-          </AnimationWrapper>
-
-          <AnimationWrapper direction="up" delay={0.4}>
-            <p className="text-xl lg:text-2xl text-primary-200 max-w-4xl mx-auto leading-relaxed">
-              {currentContent.hero.subtitle}
+      {/* Selector de Categorías */}
+      <section className="py-12 md:py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-6">
+              {currentLanguage.code === 'es' ? 'Nuestras Especialidades' : 'Our Specialties'}
+            </h2>
+            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+              {currentLanguage.code === 'es' 
+                ? 'Ofrecemos soluciones integrales en dos grandes áreas de especialización'
+                : 'We offer comprehensive solutions in two major areas of specialization'
+              }
             </p>
-          </AnimationWrapper>
-        </div>
-      </section>
+          </motion.div>
 
-      {/* Main Services Section */}
-      <section className="section-padding bg-white">
-        <div className="container-custom">
-          <AnimationWrapper direction="up">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl lg:text-5xl font-display font-bold text-secondary-900 mb-6">
-                {currentContent.sections.main.title}
-              </h2>
-              <p className="text-xl text-secondary-600 max-w-3xl mx-auto">
-                {currentContent.sections.main.subtitle}
-              </p>
-            </div>
-          </AnimationWrapper>
-
-          <StaggerContainer className="grid md:grid-cols-2 gap-12">
-            {services.map((service, index) => {
-              const title = currentLanguage.code === 'es' ? service.title : service.titleEn;
-              const description = currentLanguage.code === 'es' ? service.description : service.descriptionEn;
-              const features = currentLanguage.code === 'es' ? service.features : service.featuresEn;
-              const IconComponent = serviceIcons[title as keyof typeof serviceIcons] || Building;
-
-              return (
-                <StaggerItem key={service.id}>
-                  <HoverCard hoverScale={1.02} className="h-full">
-                    <div className="bg-gradient-to-br from-white to-primary-50 rounded-2xl p-8 shadow-lg border border-primary-100 h-full">
-                      <div className="flex items-center space-x-4 mb-6">
-                        <motion.div
-                          whileHover={{ rotate: 360, scale: 1.1 }}
-                          transition={{ duration: 0.6 }}
-                          className="w-16 h-16 bg-gradient-to-r from-primary-500 to-accent-500 rounded-xl flex items-center justify-center"
-                        >
-                          <IconComponent className="w-8 h-8 text-white" />
-                        </motion.div>
-                        <h3 className="text-2xl font-bold text-secondary-900">
-                          {title}
-                        </h3>
-                      </div>
-
-                      <p className="text-secondary-700 mb-6 leading-relaxed">
-                        {description}
-                      </p>
-
-                      <div className="space-y-3 mb-8">
-                        {features.map((feature, featureIndex) => (
-                          <motion.div
-                            key={featureIndex}
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            transition={{ delay: featureIndex * 0.1 }}
-                            className="flex items-center space-x-3"
-                          >
-                            <CheckCircle className="w-5 h-5 text-accent-500 flex-shrink-0" />
-                            <span className="text-secondary-700">{feature}</span>
-                          </motion.div>
-                        ))}
-                      </div>
-
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="w-full bg-gradient-to-r from-primary-500 to-accent-500 hover:from-primary-600 hover:to-accent-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2"
-                      >
-                        <span>{currentLanguage.code === 'es' ? 'Solicitar Cotización' : 'Request Quote'}</span>
-                        <ArrowRight className="w-5 h-5" />
-                      </motion.button>
-                    </div>
-                  </HoverCard>
-                </StaggerItem>
-              );
-            })}
-          </StaggerContainer>
-        </div>
-      </section>
-
-      {/* Process Section */}
-      <section className="section-padding bg-gradient-to-br from-secondary-50 to-primary-50">
-        <div className="container-custom">
-          <AnimationWrapper direction="up">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl lg:text-5xl font-display font-bold text-secondary-900 mb-6">
-                {currentContent.sections.process.title}
-              </h2>
-              <p className="text-xl text-secondary-600 max-w-3xl mx-auto">
-                {currentContent.sections.process.subtitle}
-              </p>
-            </div>
-          </AnimationWrapper>
-
-          <div className="relative">
-            {/* Línea conectora */}
-            <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 to-accent-500 rounded-full transform -translate-y-1/2"></div>
-
-            <StaggerContainer className="grid lg:grid-cols-4 gap-8">
-              {currentContent.sections.process.steps.map((step, index) => (
-                <StaggerItem key={index}>
-                  <motion.div
-                    whileHover={{ y: -10 }}
-                    className="relative bg-white rounded-2xl p-6 shadow-lg text-center"
-                  >
-                    {/* Número del paso */}
-                    <motion.div
-                      whileHover={{ scale: 1.1, rotate: 360 }}
-                      transition={{ duration: 0.6 }}
-                      className="w-12 h-12 bg-gradient-to-r from-primary-500 to-accent-500 rounded-full flex items-center justify-center text-white font-bold text-lg mx-auto mb-4 relative z-10"
-                    >
-                      {index + 1}
-                    </motion.div>
-
-                    <h3 className="text-xl font-bold text-secondary-900 mb-3">
-                      {step.title}
-                    </h3>
-                    <p className="text-secondary-700 leading-relaxed">
-                      {step.description}
-                    </p>
-                  </motion.div>
-                </StaggerItem>
+          <div className="flex justify-center mb-12">
+            <div className="bg-gray-100 rounded-2xl p-2 inline-flex">
+              {Object.entries(content.categories).map(([key, category]) => (
+                <button
+                  key={key}
+                  onClick={() => setActiveCategory(key)}
+                  className={`flex items-center space-x-3 px-6 md:px-8 py-3 md:py-4 rounded-xl font-semibold transition-all duration-300 ${
+                    activeCategory === key
+                      ? 'bg-gradient-to-r from-[#00A8E0] to-[#00A651] text-white shadow-lg'
+                      : 'text-gray-600 hover:text-gray-800'
+                  }`}
+                >
+                  {getIcon(category.icon, "w-5 h-5")}
+                  <span className="hidden md:inline">{category.title}</span>
+                  <span className="md:hidden text-sm">
+                    {key === 'construction' ? 'Construcción' : 'Topografía'}
+                  </span>
+                </button>
               ))}
-            </StaggerContainer>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Why Choose Us Section */}
-      <section className="section-padding bg-white">
-        <div className="container-custom">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <AnimationWrapper direction="left">
-              <div>
-                <h2 className="text-4xl lg:text-5xl font-display font-bold text-secondary-900 mb-8">
-                  {currentContent.sections.why.title}
-                </h2>
+      {/* Servicios por Categoría */}
+      <section className="py-16 md:py-20 bg-gradient-to-br from-gray-50 to-white">
+        <div className="container mx-auto px-4">
+          <motion.div
+            key={activeCategory}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="max-w-7xl mx-auto"
+          >
+            {/* Encabezado de categoría */}
+            <div className="text-center mb-12 md:mb-16">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", bounce: 0.4 }}
+                className="inline-flex items-center justify-center w-20 h-20 md:w-24 md:h-24 bg-gradient-to-r from-[#00A8E0] to-[#00A651] rounded-2xl mb-6 shadow-2xl"
+              >
+                {getIcon(
+                  content.categories[activeCategory as keyof typeof content.categories].icon,
+                  "w-10 h-10 md:w-12 md:h-12 text-white"
+                )}
+              </motion.div>
+              
+              <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
+                {content.categories[activeCategory as keyof typeof content.categories].title}
+              </h3>
+              <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+                {content.categories[activeCategory as keyof typeof content.categories].description}
+              </p>
+            </div>
 
-                <div className="grid gap-4">
-                  {currentContent.sections.why.reasons.map((reason, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, x: -30 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      whileHover={{ x: 10 }}
-                      className="flex items-center space-x-4 p-4 rounded-xl hover:bg-primary-50 transition-colors duration-300"
-                    >
-                      <CheckCircle className="w-6 h-6 text-accent-500 flex-shrink-0" />
-                      <span className="text-lg text-secondary-700 font-medium">{reason}</span>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            </AnimationWrapper>
+            {/* Grid de servicios */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+              {content.categories[activeCategory as keyof typeof content.categories].services.map((service, idx) => (
+                <motion.div
+                  key={idx}
+                  variants={fadeInUp}
+                  whileHover={{ y: -10, scale: 1.02 }}
+                  className="group bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-500"
+                >
+                  {/* Imagen */}
+                  <div className="overflow-hidden">
+                    <img
+                      src={service.image}
+                      alt={service.name}
+                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
 
-            <AnimationWrapper direction="right">
-              <div className="relative">
-                <div className="bg-gradient-to-br from-primary-100 to-accent-100 rounded-2xl p-8 h-96">
-                  <div className="h-full bg-secondary-200 rounded-xl flex items-center justify-center">
-                    <div className="text-center">
-                      <Award className="w-20 h-20 text-primary-600 mx-auto mb-4" />
-                      <h4 className="text-xl font-bold text-secondary-900 mb-2">
-                        {currentLanguage.code === 'es' ? 'Certificación ISO 9001' : 'ISO 9001 Certification'}
-                      </h4>
-                      <p className="text-secondary-600">
-                        {currentLanguage.code === 'es' 
-                          ? 'Calidad garantizada en todos nuestros procesos' 
-                          : 'Guaranteed quality in all our processes'
-                        }
-                      </p>
+                  {/* Header del servicio */}
+                  <div className="p-6 border-b border-gray-100">
+                    <div className="flex items-start space-x-4">
+                      <motion.div
+                        whileHover={{ rotate: 360, scale: 1.2 }}
+                        transition={{ duration: 0.8 }}
+                        className="w-14 h-14 md:w-16 md:h-16 bg-gradient-to-r from-[#00A8E0] to-[#00A651] rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow"
+                      >
+                        {getIcon(service.icon, "w-7 h-7 md:w-8 md:h-8 text-white")}
+                      </motion.div>
+                      
+                      <div className="flex-1">
+                        <h4 className="text-xl md:text-2xl font-bold text-gray-800 mb-2 group-hover:text-[#00A651] transition-colors">
+                          {service.name}
+                        </h4>
+                        <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+                          {service.description}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            </AnimationWrapper>
-          </div>
+
+                  {/* Lista de detalles */}
+                  <div className="p-6">
+                    <h5 className="font-semibold text-gray-800 mb-4 text-sm md:text-base">
+                      {currentLanguage.code === 'es' ? 'Servicios incluidos:' : 'Services included:'}
+                    </h5>
+                    <div className="space-y-3">
+                      {service.details.map((detail, di) => (
+                        <motion.div
+                          key={di}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: di * 0.1 }}
+                          className="flex items-center space-x-3"
+                        >
+                          <CheckCircle className="w-5 h-5 text-[#00A651] flex-shrink-0" />
+                          <span className="text-gray-700 text-sm md:text-base">{detail}</span>
+                        </motion.div>
+                      ))}
+                    </div>
+
+                    {/* Botón Ver Proyectos */}
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="w-full mt-6 bg-gradient-to-r from-[#00A8E0] to-[#00A651] text-white py-3 px-6 rounded-xl font-semibold hover:shadow-lg transition-all flex items-center justify-center space-x-2"
+                    >
+                      <span>{currentLanguage.code === 'es' ? 'Ver Proyectos' : 'View Projects'}</span>
+                      <motion.div
+                        animate={{ x: [0, 4, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                      >
+                        <ArrowRight className="w-5 h-5" />
+                      </motion.div>
+                    </motion.button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="section-padding bg-gradient-to-r from-secondary-900 to-primary-900">
-        <div className="container-custom text-center">
-          <AnimationWrapper direction="up">
-            <h2 className="text-4xl lg:text-5xl font-display font-bold text-white mb-6">
+      <section className="py-16 md:py-20 bg-gradient-to-br from-[#00A8E0] via-[#00B9CE] to-[#00A651]">
+        <div className="container mx-auto px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="max-w-4xl mx-auto"
+          >
+            <motion.div
+              animate={{ 
+                rotate: [0, 5, -5, 0],
+                scale: [1, 1.05, 1]
+              }}
+              transition={{ 
+                duration: 6, 
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="inline-flex items-center justify-center w-20 h-20 md:w-24 md:h-24 bg-white/20 backdrop-blur-sm rounded-full mb-6 md:mb-8"
+            >
+              <Users className="w-10 h-10 md:w-12 md:h-12 text-white" />
+            </motion.div>
+
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
               {currentLanguage.code === 'es' 
-                ? '¿Listo para comenzar tu proyecto?' 
-                : 'Ready to start your project?'
+                ? '¿Tienes un proyecto en mente?'
+                : 'Do you have a project in mind?'
               }
             </h2>
-            <p className="text-xl text-primary-200 mb-8 max-w-2xl mx-auto">
-              {currentLanguage.code === 'es'
-                ? 'Contáctanos hoy y obtén una cotización personalizada para tu proyecto de construcción o ingeniería.'
-                : 'Contact us today and get a personalized quote for your construction or engineering project.'
+            
+            <p className="text-lg md:text-xl text-white/90 mb-8 leading-relaxed">
+              {currentLanguage.code === 'es' 
+                ? 'Nuestro equipo de expertos está listo para convertir tu visión en realidad. Contáctanos para una consulta gratuita.'
+                : 'Our team of experts is ready to turn your vision into reality. Contact us for a free consultation.'
               }
             </p>
+
             <motion.button
-              whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(249, 115, 22, 0.4)' }}
+              whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-primary-500 hover:bg-primary-600 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 inline-flex items-center space-x-2"
+              className="bg-white text-[#00A8E0] font-bold py-4 px-8 md:px-12 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 inline-flex items-center space-x-3"
             >
-              <span>{currentLanguage.code === 'es' ? 'Solicitar Cotización' : 'Request Quote'}</span>
-              <ArrowRight className="w-5 h-5" />
+              <span className="text-lg">
+                {currentLanguage.code === 'es' ? 'Solicitar Cotización' : 'Request Quote'}
+              </span>
+              <ArrowRight className="w-6 h-6" />
             </motion.button>
-          </AnimationWrapper>
+          </motion.div>
         </div>
       </section>
-    </motion.div>
+    </div>
   );
 };
 

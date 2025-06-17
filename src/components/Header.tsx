@@ -1,300 +1,227 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, Globe, Phone, ChevronDown } from 'lucide-react';
-import { navItems } from '../data/companyData';
-import type { Language } from '../types';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X, Globe, Phone, ChevronDown, Mail, MapPin } from 'lucide-react';
+
+interface NavItem {
+  name: string;
+  nameEn: string;
+  path: string;
+}
+
+interface Language {
+  code: string;
+  name: string;
+  flag: string;
+}
 
 interface HeaderProps {
   currentLanguage: Language;
   onLanguageChange: (language: Language) => void;
+  onNavigate?: (path: string) => void;
+  currentPath?: string;
 }
+
+const navItems: NavItem[] = [
+  { name: 'Inicio', nameEn: 'Home', path: '/' },
+  { name: 'Nosotros', nameEn: 'About', path: '/about' },
+  { name: 'Servicios', nameEn: 'Services', path: '/services' },
+  { name: 'Proyectos', nameEn: 'Projects', path: '/projects' },
+  { name: 'Sostenibilidad', nameEn: 'Sustainability', path: '/sustainability' }
+];
 
 const languages: Language[] = [
   { code: 'es', name: 'Español', flag: '🇪🇸' },
   { code: 'en', name: 'English', flag: '🇺🇸' }
 ];
 
-const Header: React.FC<HeaderProps> = ({ currentLanguage, onLanguageChange }) => {
+const Header: React.FC<HeaderProps> = ({ 
+  currentLanguage, 
+  onLanguageChange,
+  onNavigate,
+  currentPath = '/'
+}) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
-  const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('up');
-  const [lastScrollY, setLastScrollY] = useState(0);
-  
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { scrollY } = useScroll();
-
-  // Transform para efectos de paralaje en el header
-  const headerY = useTransform(scrollY, [0, 200], [0, -50]);
-  const logoScale = useTransform(scrollY, [0, 100], [1, 0.9]);
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      
-      // Determinar si está scrolleado
-      setIsScrolled(currentScrollY > 50);
-      
-      // Determinar dirección del scroll
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        setScrollDirection('down');
-      } else {
-        setScrollDirection('up');
-      }
-      
-      setLastScrollY(currentScrollY);
+      setIsScrolled(window.scrollY > 20);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [lastScrollY]);
-
-  // Cerrar menús al cambiar de ruta
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-    setIsLanguageDropdownOpen(false);
-  }, [location.pathname]);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleNavigation = (path: string) => {
-    navigate(path);
+    if (onNavigate) {
+      onNavigate(path);
+    } else {
+      // Fallback: navegación directa usando window.location
+      console.log('Navegando a:', path);
+      // Si usas React Router, puedes usar navigate() aquí
+      // Si usas Next.js, puedes usar router.push() aquí
+      // Por ahora, como fallback:
+      window.location.href = path;
+    }
     setIsMobileMenuOpen(false);
   };
 
-  const isActivePath = (path: string) => {
-    return location.pathname === path;
-  };
+  const isActivePath = (path: string) => currentPath === path;
 
   const handleLanguageChange = (language: Language) => {
     onLanguageChange(language);
     setIsLanguageDropdownOpen(false);
   };
 
-  // Variantes de animación para el header
-  const headerVariants = {
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.3,
-        ease: 'easeOut'
-      }
-    },
-    hidden: {
-      y: -100,
-      opacity: 0,
-      transition: {
-        duration: 0.3,
-        ease: 'easeIn'
-      }
-    }
-  };
-
-  // Variantes para los elementos del nav
-  const navItemVariants = {
-    rest: { scale: 1, y: 0 },
-    hover: { 
-      scale: 1.05, 
-      y: -2,
-      transition: {
-        duration: 0.2,
-        ease: 'easeOut'
-      }
-    },
-    tap: { scale: 0.95 }
-  };
-
   return (
     <>
+      {/* Top Bar - Información de contacto */}
+      <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled ? 'h-0 opacity-0 overflow-hidden' : 'h-10 opacity-100'
+      }`}>
+        <div className="bg-[#00A651] text-white h-full">
+          <div className="container mx-auto px-4 h-full flex items-center justify-between text-sm">
+            <div className="flex items-center space-x-6">
+              <a href="tel:066635228" className="flex items-center space-x-2 hover:text-white/80 transition-colors">
+                <Phone className="w-3 h-3" />
+                <span>066-635228</span>
+              </a>
+              <a href="mailto:wmerinosgrupo@merino.com.pe" className="hidden md:flex items-center space-x-2 hover:text-white/80 transition-colors">
+                <Mail className="w-3 h-3" />
+                <span>wmerinosgrupo@merino.com.pe</span>
+              </a>
+            </div>
+            <div className="flex items-center space-x-2">
+              <MapPin className="w-3 h-3" />
+              <span className="hidden sm:inline">Calle De Laureles Mz "M" Lt 5 Urb. Alto la Merced Huancayo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Header Principal */}
       <motion.header
-        initial="visible"
-        animate={scrollDirection === 'down' && isScrolled ? 'hidden' : 'visible'}
-        variants={headerVariants}
-        style={{ y: headerY }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        initial={{ y: 0 }}
+        animate={{ y: isScrolled ? 0 : 40 }}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
+        className={`fixed left-0 right-0 z-40 transition-all duration-300 ${
           isScrolled 
-            ? 'bg-white/95 backdrop-blur-xl shadow-2xl border-b border-primary-100' 
-            : 'bg-transparent'
+            ? 'top-0 bg-white shadow-lg' 
+            : 'top-0 bg-white/95 backdrop-blur-sm'
         }`}
       >
-        {/* Barra de progreso de scroll */}
-        <motion.div
-          className="absolute top-0 left-0 h-1 bg-gradient-to-r from-primary-500 via-accent-500 to-primary-600 origin-left"
-          style={{
-            scaleX: useTransform(scrollY, [0, 2000], [0, 1])
-          }}
-        />
-
-        <div className="container-custom">
+        <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <motion.div
-              style={{ scale: logoScale }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center space-x-3 cursor-pointer group"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="flex items-center space-x-3 cursor-pointer"
               onClick={() => handleNavigation('/')}
             >
+              {/* Logo estilo brochure */}
               <div className="relative">
-                {/* Logo principal */}
-                <motion.div
-                  animate={{ rotate: [0, 360] }}
-                  transition={{ 
-                    duration: 20, 
-                    repeat: Infinity, 
-                    ease: 'linear' 
-                  }}
-                  className="w-12 h-12 bg-gradient-to-r from-primary-500 via-accent-500 to-primary-600 rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300"
-                >
-                  <motion.span
-                    animate={{ rotate: [0, -360] }}
-                    transition={{ 
-                      duration: 20, 
-                      repeat: Infinity, 
-                      ease: 'linear' 
-                    }}
-                    className="text-white font-bold text-lg"
-                  >
-                    GM
-                  </motion.span>
-                </motion.div>
-
-                {/* Anillo orbital */}
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ 
-                    duration: 8, 
-                    repeat: Infinity, 
-                    ease: 'linear' 
-                  }}
-                  className="absolute inset-0 w-16 h-16 border-2 border-primary-300 border-opacity-40 rounded-full -top-2 -left-2"
-                />
+                <div className="w-14 h-14 bg-[#00A651] rounded-full flex items-center justify-center shadow-md">
+                  <span className="text-white font-bold text-xl">GM</span>
+                </div>
+                {/* Elemento decorativo */}
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-[#00B9CE] rounded-full opacity-60"></div>
               </div>
-
-              <div className="hidden sm:block">
-                <motion.h1 
-                  className={`font-display font-bold text-xl transition-colors duration-300 ${
-                    isScrolled ? 'text-secondary-900' : 'text-white'
-                  }`}
-                  layoutId="logo-text"
-                >
-                  GRUPO MERINOS
-                </motion.h1>
-                <motion.p 
-                  className={`text-sm transition-colors duration-300 ${
-                    isScrolled ? 'text-secondary-600' : 'text-primary-200'
-                  }`}
-                  layoutId="logo-subtitle"
-                >
-                  {currentLanguage.code === 'es' ? 'Construyendo el futuro' : 'Building the future'}
-                </motion.p>
+              
+              <div>
+                <h1 className="font-bold text-xl text-gray-800 leading-tight">
+                  GRUPO MERINO
+                </h1>
+                <p className="text-xs text-[#00A651] font-medium">
+                  INGENIEROS SAC
+                </p>
               </div>
             </motion.div>
 
             {/* Navigation Desktop */}
             <nav className="hidden lg:flex items-center space-x-1">
-              {navItems.map((item, index) => (
-                <motion.button
+              {navItems.map((item) => (
+                <button
                   key={item.path}
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.6 }}
-                  variants={navItemVariants}
-                  initial="rest"
-                  whileHover="hover"
-                  whileTap="tap"
-                  onClick={() => handleNavigation(item.path)}
-                  className={`relative px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
+                  onClick={() => {
+                    console.log('Clic en:', item.path); // Debug
+                    handleNavigation(item.path);
+                  }}
+                  className={`relative px-5 py-2.5 font-medium transition-all duration-300 ${
                     isActivePath(item.path)
-                      ? isScrolled 
-                        ? 'text-primary-600 bg-primary-50' 
-                        : 'text-primary-300 bg-white/10'
-                      : isScrolled 
-                        ? 'text-secondary-700 hover:text-primary-600 hover:bg-primary-50' 
-                        : 'text-white/90 hover:text-primary-300 hover:bg-white/10'
+                      ? 'text-[#00A651]'
+                      : 'text-gray-700 hover:text-[#00A651]'
                   }`}
                 >
                   {currentLanguage.code === 'es' ? item.name : item.nameEn}
                   
-                  {/* Indicador activo mejorado */}
+                  {/* Indicador activo estilo brochure mejorado */}
+                  <motion.div
+                    className={`absolute bottom-0 left-0 right-0 h-1 transition-all duration-300 ${
+                      isActivePath(item.path) 
+                        ? 'bg-gradient-to-r from-[#00A651] via-[#00B9CE] to-[#00A651] opacity-100' 
+                        : 'bg-gray-300 opacity-0 hover:opacity-30'
+                    }`}
+                  />
                   {isActivePath(item.path) && (
                     <motion.div
-                      layoutId="activeIndicator"
-                      className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-primary-500 rounded-full"
-                      initial={false}
-                      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                      layoutId="activeNav"
+                      className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#00A651] via-[#00B9CE] to-[#00A651] shadow-sm"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                     />
                   )}
-                </motion.button>
+                </button>
               ))}
             </nav>
 
             {/* Actions */}
-            <div className="flex items-center space-x-4">
-              {/* Language Selector con Dropdown */}
+            <div className="flex items-center space-x-3">
+              {/* Language Selector */}
               <div className="relative">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                <button
                   onClick={() => setIsLanguageDropdownOpen(!isLanguageDropdownOpen)}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg border border-primary-500 font-medium transition-all duration-300 ${
-                    isScrolled 
-                      ? 'text-secondary-900 hover:bg-primary-50' 
-                      : 'text-white hover:bg-white/10'
-                  }`}
+                  className="flex items-center space-x-2 px-3 py-2 rounded-md border border-gray-300 hover:border-[#00A651] transition-colors duration-300"
                 >
-                  <Globe className="w-4 h-4" />
-                  <span className="hidden sm:inline">{currentLanguage.code.toUpperCase()}</span>
-                  <motion.div
-                    animate={{ rotate: isLanguageDropdownOpen ? 180 : 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <ChevronDown className="w-4 h-4" />
-                  </motion.div>
-                </motion.button>
+                  <Globe className="w-4 h-4 text-gray-600" />
+                  <span className="text-sm font-medium text-gray-700">{currentLanguage.code.toUpperCase()}</span>
+                  <ChevronDown className={`w-4 h-4 text-gray-600 transition-transform duration-200 ${
+                    isLanguageDropdownOpen ? 'rotate-180' : ''
+                  }`} />
+                </button>
 
-                {/* Dropdown */}
                 <AnimatePresence>
                   {isLanguageDropdownOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                      transition={{ duration: 0.2 }}
-                      className="absolute top-full right-0 mt-2 w-40 bg-white rounded-xl shadow-2xl border border-primary-100 overflow-hidden z-50"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="absolute top-full right-0 mt-2 w-36 bg-white rounded-md shadow-xl border border-gray-200 overflow-hidden"
                     >
                       {languages.map((lang) => (
-                        <motion.button
+                        <button
                           key={lang.code}
-                          whileHover={{ backgroundColor: '#fff7ed' }}
                           onClick={() => handleLanguageChange(lang)}
-                          className={`w-full px-4 py-3 text-left flex items-center space-x-3 transition-colors duration-200 ${
+                          className={`w-full px-4 py-2.5 text-left flex items-center space-x-3 transition-colors ${
                             currentLanguage.code === lang.code 
-                              ? 'bg-primary-50 text-primary-600' 
-                              : 'text-secondary-700 hover:text-primary-600'
+                              ? 'bg-[#00A651]/10 text-[#00A651]' 
+                              : 'text-gray-700 hover:bg-gray-50'
                           }`}
                         >
-                          <span className="text-lg">{lang.flag}</span>
-                          <span className="font-medium">{lang.name}</span>
-                        </motion.button>
+                          <span>{lang.flag}</span>
+                          <span className="text-sm font-medium">{lang.name}</span>
+                        </button>
                       ))}
                     </motion.div>
                   )}
                 </AnimatePresence>
               </div>
 
-              {/* Contact Button */}
+              {/* Contact Button - Estilo brochure */}
               <motion.button
-                whileHover={{ 
-                  scale: 1.05, 
-                  boxShadow: '0 20px 40px rgba(249, 115, 22, 0.3)' 
-                }}
-                whileTap={{ scale: 0.95 }}
-                className="hidden md:flex items-center space-x-2 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="hidden md:flex items-center space-x-2 bg-[#00B9CE] hover:bg-[#00A651] text-white px-5 py-2.5 rounded-md font-medium transition-all duration-300 shadow-sm"
                 onClick={() => handleNavigation('/contact')}
               >
                 <Phone className="w-4 h-4" />
@@ -302,13 +229,9 @@ const Header: React.FC<HeaderProps> = ({ currentLanguage, onLanguageChange }) =>
               </motion.button>
 
               {/* Mobile Menu Button */}
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+              <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className={`lg:hidden p-2 rounded-lg transition-all duration-300 ${
-                  isScrolled ? 'text-secondary-900 hover:bg-primary-50' : 'text-white hover:bg-white/10'
-                }`}
+                className="lg:hidden p-2 rounded-md hover:bg-gray-100 transition-colors"
               >
                 <AnimatePresence mode="wait">
                   {isMobileMenuOpen ? (
@@ -317,9 +240,8 @@ const Header: React.FC<HeaderProps> = ({ currentLanguage, onLanguageChange }) =>
                       initial={{ rotate: -90, opacity: 0 }}
                       animate={{ rotate: 0, opacity: 1 }}
                       exit={{ rotate: 90, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
                     >
-                      <X className="w-6 h-6" />
+                      <X className="w-6 h-6 text-gray-700" />
                     </motion.div>
                   ) : (
                     <motion.div
@@ -327,16 +249,23 @@ const Header: React.FC<HeaderProps> = ({ currentLanguage, onLanguageChange }) =>
                       initial={{ rotate: 90, opacity: 0 }}
                       animate={{ rotate: 0, opacity: 1 }}
                       exit={{ rotate: -90, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
                     >
-                      <Menu className="w-6 h-6" />
+                      <Menu className="w-6 h-6 text-gray-700" />
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </motion.button>
+              </button>
             </div>
           </div>
         </div>
+
+        {/* Elemento decorativo inferior - estilo brochure mejorado */}
+        <motion.div 
+          className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#00A651] via-[#00B9CE] to-[#00A651] opacity-20"
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        />
       </motion.header>
 
       {/* Mobile Menu */}
@@ -349,7 +278,7 @@ const Header: React.FC<HeaderProps> = ({ currentLanguage, onLanguageChange }) =>
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
+              className="fixed inset-0 bg-black/30 backdrop-blur-sm z-30 lg:hidden"
             />
             
             {/* Menu Panel */}
@@ -358,105 +287,97 @@ const Header: React.FC<HeaderProps> = ({ currentLanguage, onLanguageChange }) =>
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-50 lg:hidden overflow-y-auto"
+              className="fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-40 lg:hidden overflow-y-auto"
             >
-              {/* Header del menú */}
-              <div className="p-6 border-b border-primary-100">
-                <div className="flex items-center justify-between">
+              {/* Header del menú móvil */}
+              <div className="bg-[#00A651] text-white p-6">
+                <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gradient-to-r from-primary-500 to-accent-500 rounded-full flex items-center justify-center">
-                      <span className="text-white font-bold">GM</span>
+                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+                      <span className="text-[#00A651] font-bold text-lg">GM</span>
                     </div>
                     <div>
-                      <h3 className="font-bold text-secondary-900">GRUPO MERINOS</h3>
-                      <p className="text-sm text-secondary-600">Menú de navegación</p>
+                      <h3 className="font-bold text-white">GRUPO MERINO</h3>
+                      <p className="text-xs text-white/80">INGENIEROS SAC</p>
                     </div>
                   </div>
-                  <motion.button
-                    whileTap={{ scale: 0.95 }}
+                  <button
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-2 rounded-lg hover:bg-primary-50 transition-colors duration-200"
+                    className="p-1.5 rounded-md hover:bg-white/20 transition-colors"
                   >
-                    <X className="w-5 h-5 text-secondary-600" />
-                  </motion.button>
+                    <X className="w-5 h-5" />
+                  </button>
                 </div>
               </div>
 
-              {/* Navigation */}
+              {/* Navigation Mobile */}
               <div className="p-6">
-                <nav className="space-y-2">
-                  {navItems.map((item, index) => (
-                    <motion.button
+                <nav className="space-y-1">
+                  {navItems.map((item) => (
+                    <button
                       key={item.path}
-                      initial={{ opacity: 0, x: 50 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      onClick={() => handleNavigation(item.path)}
-                      className={`block w-full text-left py-4 px-4 rounded-xl font-medium transition-all duration-300 ${
+                      onClick={() => {
+                        console.log('Clic móvil en:', item.path); // Debug
+                        handleNavigation(item.path);
+                      }}
+                      className={`block w-full text-left py-3 px-4 rounded-md font-medium transition-all ${
                         isActivePath(item.path)
-                          ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg'
-                          : 'text-secondary-700 hover:bg-primary-50 hover:text-primary-600'
+                          ? 'bg-[#00A651] text-white'
+                          : 'text-gray-700 hover:bg-gray-100'
                       }`}
-                      whileHover={{ x: 5 }}
-                      whileTap={{ scale: 0.98 }}
                     >
-                      <div className="flex items-center justify-between">
-                        <span>{currentLanguage.code === 'es' ? item.name : item.nameEn}</span>
-                        {isActivePath(item.path) && (
-                          <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            className="w-2 h-2 bg-white rounded-full"
-                          />
-                        )}
-                      </div>
-                    </motion.button>
+                      {currentLanguage.code === 'es' ? item.name : item.nameEn}
+                    </button>
                   ))}
                 </nav>
 
                 {/* Language Selector Mobile */}
-                <div className="mt-8 pt-6 border-t border-primary-100">
-                  <h4 className="text-sm font-semibold text-secondary-600 mb-3">
+                <div className="mt-8 pt-6 border-t border-gray-200">
+                  <h4 className="text-sm font-semibold text-gray-600 mb-3">
                     {currentLanguage.code === 'es' ? 'Idioma' : 'Language'}
                   </h4>
                   <div className="grid grid-cols-2 gap-2">
                     {languages.map((lang) => (
-                      <motion.button
+                      <button
                         key={lang.code}
-                        whileTap={{ scale: 0.95 }}
                         onClick={() => handleLanguageChange(lang)}
-                        className={`p-3 rounded-lg border-2 transition-all duration-300 ${
+                        className={`p-3 rounded-md border-2 transition-all ${
                           currentLanguage.code === lang.code
-                            ? 'border-primary-500 bg-primary-50 text-primary-600'
-                            : 'border-secondary-200 text-secondary-700 hover:border-primary-300'
+                            ? 'border-[#00A651] bg-[#00A651]/10 text-[#00A651]'
+                            : 'border-gray-200 text-gray-700 hover:border-gray-300'
                         }`}
                       >
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center justify-center space-x-2">
                           <span>{lang.flag}</span>
-                          <span className="font-medium text-sm">{lang.name}</span>
+                          <span className="text-sm font-medium">{lang.name}</span>
                         </div>
-                      </motion.button>
+                      </button>
                     ))}
                   </div>
                 </div>
 
-                {/* Contact Button Mobile */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 }}
-                  className="mt-8"
-                >
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                {/* Contact Mobile */}
+                <div className="mt-6">
+                  <button
                     onClick={() => handleNavigation('/contact')}
-                    className="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg"
+                    className="w-full bg-[#00B9CE] hover:bg-[#00A651] text-white py-3 px-4 rounded-md font-medium transition-colors flex items-center justify-center space-x-2"
                   >
                     <Phone className="w-5 h-5" />
-                    <span>{currentLanguage.code === 'es' ? 'Contactar Ahora' : 'Contact Now'}</span>
-                  </motion.button>
-                </motion.div>
+                    <span>{currentLanguage.code === 'es' ? 'Contáctanos' : 'Contact Us'}</span>
+                  </button>
+                </div>
+
+                {/* Info de contacto móvil */}
+                <div className="mt-8 space-y-3 text-sm text-gray-600">
+                  <a href="tel:066635228" className="flex items-center space-x-2 hover:text-[#00A651]">
+                    <Phone className="w-4 h-4" />
+                    <span>066-635228</span>
+                  </a>
+                  <a href="mailto:wmerinosgrupo@merino.com.pe" className="flex items-center space-x-2 hover:text-[#00A651]">
+                    <Mail className="w-4 h-4" />
+                    <span>wmerinosgrupo@merino.com.pe</span>
+                  </a>
+                </div>
               </div>
             </motion.div>
           </>
@@ -470,6 +391,9 @@ const Header: React.FC<HeaderProps> = ({ currentLanguage, onLanguageChange }) =>
           onClick={() => setIsLanguageDropdownOpen(false)}
         />
       )}
+
+      {/* Espaciador para evitar que el header tape el contenido */}
+      <div className={`${isScrolled ? 'h-20' : 'h-[120px]'} transition-all duration-300`}></div>
     </>
   );
 };
