@@ -71,7 +71,7 @@ const EthicsPage: React.FC<EthicsPageProps> = ({ currentLanguage }) => {
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0 },
       }}
-      className="uppercase tracking-widest text-[#00B9CE] text-sm md:text-base mb-4 font-semibold"
+      className="uppercase tracking-widest text-[#f5f8f8] text-sm md:text-base mb-4 font-semibold"
     >
       {currentLanguage.code === 'es' ? 'NUESTRA HISTORIA' : 'OUR HISTORY'}
     </motion.h5>
@@ -84,9 +84,7 @@ const EthicsPage: React.FC<EthicsPageProps> = ({ currentLanguage }) => {
       }}
       className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight"
     >
-      <span className="block text-white">
-        {currentLanguage.code === 'es' ? 'CONSTRUYENDO' : 'BUILDING'}
-      </span>
+     
       <span className="block text-[#00B9CE]">
         {content.titlehero}
       </span>
@@ -120,9 +118,9 @@ const EthicsPage: React.FC<EthicsPageProps> = ({ currentLanguage }) => {
 
 
 {/* Sección: Gestión ética y de cumplimiento corporativo */}
-<section className="w-full bg-gradient-to-b from-[#00B9CE] to-[#00A651] py-20 text-white">
-  
+<section className="w-full bg-white py-20 text-gray-800">
   <div className="container-custom px-6 md:px-16 lg:px-24 flex flex-col md:flex-row items-center gap-10">
+    
     {/* Imagen */}
     <motion.div
       initial={{ opacity: 0, x: -40 }}
@@ -144,19 +142,19 @@ const EthicsPage: React.FC<EthicsPageProps> = ({ currentLanguage }) => {
       transition={{ duration: 0.6 }}
       className="w-full md:w-1/2"
     >
-      <h3 className="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
+      <h3 className="text-3xl md:text-4xl font-bold text-[#009e49] mb-6 leading-tight">
         {currentLanguage.code === 'es'
           ? 'Gestión ética y de cumplimiento corporativo'
           : 'Ethical and Corporate Compliance Management'}
       </h3>
 
-      <p className="mb-4 text-justify">
+      <p className="mb-4 text-justify text-gray-700">
         {currentLanguage.code === 'es'
           ? 'En JJC estamos totalmente comprometidos con la ética y la transparencia, elementos claves de nuestro modelo de gestión y que responden a la actual confianza depositada en nosotros por todos nuestros stakeholders.'
           : 'At JJC, we are fully committed to ethics and transparency—key elements of our management model that reflect the trust placed in us by all our stakeholders.'}
       </p>
 
-      <p className="mb-6 text-justify">
+      <p className="mb-6 text-justify text-gray-700">
         {currentLanguage.code === 'es'
           ? 'Por ello, hoy les invitamos a revisar nuestro Código de Ética en el cual están establecidos los lineamientos que, en concordancia con los valores de ética y transparencia, y las buenas prácticas corporativas, guían la conducta y la forma en la que en JJC tomamos decisiones, buscando generar un impacto positivo tanto en nuestra organización como en la sociedad en general.'
           : 'We invite you to review our Code of Ethics, which outlines the guidelines aligned with our values of ethics and transparency and best corporate practices. These guide our conduct and decision-making, seeking to create a positive impact in our organization and society.'}
@@ -164,7 +162,7 @@ const EthicsPage: React.FC<EthicsPageProps> = ({ currentLanguage }) => {
 
       <a
         href="/codigo-etica"
-        className="inline-block px-6 py-3 bg-white text-[#009e49] hover:text-white hover:bg-[#007a3a] font-semibold rounded-full shadow-md transition-all duration-300"
+        className="inline-block px-6 py-3 bg-[#009e49] text-white hover:bg-[#007a3a] font-semibold rounded-full shadow-md transition-all duration-300"
       >
         {currentLanguage.code === 'es' ? 'Ver Código de Ética' : 'View Code of Ethics'}
       </a>
@@ -173,6 +171,7 @@ const EthicsPage: React.FC<EthicsPageProps> = ({ currentLanguage }) => {
 </section>
 
 <div className="w-full h-10 bg-white"></div>
+
 
 
 {/* Sección: Sistema de Ética y Cumplimiento */}
@@ -234,8 +233,8 @@ const EthicsPage: React.FC<EthicsPageProps> = ({ currentLanguage }) => {
 <div className="w-full h-10 bg-white"></div>
 
 {/* Sección: Nuestra Línea Ética */}
-<section className="w-full bg-gradient-to-r from-[#00B9CE] to-[#3ab98f] py-20 text-white">
-  <div className="container-custom px-6 md:px-16 lg:px-24 flex flex-col md:flex-row items-center gap-12">
+<section className="w-full bg-gradient-to-r from-white via-[#f4f9f6] to-white py-20 text-[#1a1a1a]">
+  <div className="container-custom px-6 md:px-16 lg:px-24 flex flex-col md:flex-row items-center gap-12 backdrop-blur-md">
     
     {/* Texto */}
     <motion.div
@@ -244,18 +243,18 @@ const EthicsPage: React.FC<EthicsPageProps> = ({ currentLanguage }) => {
       transition={{ duration: 0.6 }}
       className="w-full md:w-1/2"
     >
-      <h3 className="text-3xl md:text-4xl font-bold mb-6">
-        <span className="text-white mr-2">&gt;</span>
+      <h3 className="text-3xl md:text-4xl font-bold mb-6 text-[#009e49]">
+        <span className="text-[#00B9CE] mr-2">&gt;</span>
         {currentLanguage.code === 'es' ? 'Nuestra Línea Ética' : 'Our Ethics Line'}
       </h3>
 
-      <p className="mb-4 text-justify">
+      <p className="mb-4 text-justify text-gray-700">
         {currentLanguage.code === 'es'
           ? 'Nuestra Línea Ética “Valores en Acción” es operada por una empresa consultora reconocida local e internacionalmente, donde clientes, colaboradores, proveedores, subcontratistas y/o, en general, cualquier persona interesada, pueden reportar conductas no éticas de la compañía, sus colaboradores, proveedores y/o socios de negocio.'
           : 'Our Ethics Line "Valores en Acción" is operated by a consulting firm recognized locally and internationally, where clients, employees, suppliers, subcontractors, and in general, any interested party can report unethical behavior by the company, its employees, suppliers, or business partners.'}
       </p>
 
-      <p className="mb-6 text-justify">
+      <p className="mb-6 text-justify text-gray-700">
         {currentLanguage.code === 'es'
           ? 'Es un sistema confidencial, anónimo e independiente constituido por cinco canales que sirven para comunicar cualquier incumplimiento a nuestro Código de Ética y/o cualquier falta o sospecha de conductas no éticas en nuestra organización.'
           : 'It is a confidential, anonymous, and independent system consisting of five channels that allow reporting any violation of our Code of Ethics and/or any unethical conduct or suspicion within our organization.'}
@@ -263,7 +262,7 @@ const EthicsPage: React.FC<EthicsPageProps> = ({ currentLanguage }) => {
 
       <a
         href="/linea-etica"
-        className="inline-block px-6 py-3 bg-white text-[#009e49] font-semibold rounded-full shadow-md hover:bg-[#00B9CE] hover:text-white transition-all duration-300"
+        className="inline-block px-6 py-3 bg-[#009e49] text-white font-semibold rounded-full shadow-md hover:bg-[#007a3a] transition-all duration-300"
       >
         {currentLanguage.code === 'es' ? 'Línea Ética' : 'Ethics Line'}
       </a>
@@ -284,8 +283,6 @@ const EthicsPage: React.FC<EthicsPageProps> = ({ currentLanguage }) => {
     </motion.div>
   </div>
 </section>
-
-<div className="w-full h-10 bg-white"></div>
 
 
 {/* Sección: Planteamiento de Inquietudes y Opiniones */}

@@ -132,8 +132,8 @@ const ContactPage: React.FC<ContactPageProps> = ({ currentLanguage }) => {
             <div className="w-full h-48 bg-white/20 rounded-lg flex items-center justify-center border border-white/30">
               <span className="text-white text-center">
                 {currentLanguage.code === 'es'
-                  ? '[Espacio para componente adicional]'
-                  : '[Space for additional component]'}
+                  ? ''
+                  : ''}
               </span>
             </div>
           </motion.div>
