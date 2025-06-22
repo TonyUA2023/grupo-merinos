@@ -12,6 +12,8 @@ import EthicsPage from './pages/EthicsPage';
 import type { Language } from './types';
 import Footer from './components/Footer';
 import ProjectDetailPage from './pages/ProjectDetailPage';
+import ContactPage from './pages/Contactpages';
+
 
 // Componente para manejar las transiciones entre páginas
 const AnimatedRoutes: React.FC<{ currentLanguage: Language }> = ({ currentLanguage }) => {
@@ -27,6 +29,7 @@ const AnimatedRoutes: React.FC<{ currentLanguage: Language }> = ({ currentLangua
         <Route path="/projects/:projectId" element={<ProjectDetailPage currentLanguage={currentLanguage} />} />
         <Route path="/sustainability" element={<SustainabilityPage currentLanguage={currentLanguage} />} />
         <Route path="/ethics" element={<EthicsPage currentLanguage={currentLanguage} />} />
+        <Route path="/contact" element={<ContactPage currentLanguage={currentLanguage} />} />
 
       </Routes>
     </AnimatePresence>

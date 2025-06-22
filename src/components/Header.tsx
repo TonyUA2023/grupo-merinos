@@ -26,7 +26,8 @@ const navItems: NavItem[] = [
   { name: 'Nosotros', nameEn: 'About', path: '/about' },
   { name: 'Servicios', nameEn: 'Services', path: '/services' },
   { name: 'Proyectos', nameEn: 'Projects', path: '/projects' },
-  { name: 'Sostenibilidad', nameEn: 'Sustainability', path: '/sustainability' }
+  { name: 'Sostenibilidad', nameEn: 'Sustainability', path: '/sustainability' },
+  { name: 'Ética y Cumplimiento', nameEn: 'Ethics', path: '/Ethics' }
 ];
 
 const languages: Language[] = [
